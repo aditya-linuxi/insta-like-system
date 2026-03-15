@@ -1,0 +1,5 @@
+{
+  "name": "Instu-Gram",
+  "description": "A simplified Instagram-like application with a microservices architecture, Redis queue, and MySQL database.",
+  "requestFramePermissions": []
+}
