@@ -1,0 +1,14 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: local-build-run-
+spec:
+  pipelineRef:
+    name: local-ci-pipeline
+  workspaces:
+    - name: source-code
+      persistentVolumeClaim:
+        claimName: hostpath-pvc
+  params:
+    - name: image-reference
+      value: "192.168.49.2:30002/library/insta-like-system:v1"

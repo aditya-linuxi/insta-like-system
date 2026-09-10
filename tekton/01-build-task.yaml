@@ -1,0 +1,36 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-and-push-local
+spec:
+  workspaces:
+    - name: source
+  params:
+    - name: image
+      type: string
+  steps:
+    - name: build
+      image: gcr.io/kaniko-project/executor:latest
+      workingDir: $(workspaces.source.path)
+      command:
+        - /kaniko/executor
+      args:
+        - --dockerfile=Dockerfile
+        - --context=$(workspaces.source.path)
+        - --destination=$(params.image)
+        - --insecure
+        - --skip-tls-verify
+        - --insecure-registry=192.168.49.2:30002
+      env:
+        - name: DOCKER_CONFIG
+          value: /kaniko/.docker/
+      volumeMounts:
+        - name: docker-config
+          mountPath: /kaniko/.docker/
+  volumes:
+    - name: docker-config
+      secret:
+        secretName: harbor-creds
+        items:
+          - key: .dockerconfigjson
+            path: config.json

@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: local-ci-pipeline
+spec:
+  workspaces:
+    - name: source-code
+  params:
+    - name: image-reference
+      type: string
+  tasks:
+    - name: build-image
+      taskRef:
+        name: build-and-push-local
+      workspaces:
+        - name: source
+          workspace: source-code
+      params:
+        - name: image
+          value: $(params.image-reference)
